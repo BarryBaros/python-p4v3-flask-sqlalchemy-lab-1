@@ -33,6 +33,20 @@ def earthquake_by_id(id):
         status = 404
     return make_response(body, status)
 
+@app.route('/earthquakes/magnitude/<float:magnitude>')
+def earthquakes_by_magnitude(magnitude):
+    # Query for earthquakes with magnitude greater than or equal to the provided value
+    earthquakes = Earthquake.query.filter(Earthquake.magnitude >= magnitude).all()
+
+    # Create the response body
+    body = {
+        'count': len(earthquakes),
+        'quakes': [earthquake.to_dict() for earthquake in earthquakes]
+    }
+
+    # Return the response with a 200 status code
+    return make_response(body, 200)
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
